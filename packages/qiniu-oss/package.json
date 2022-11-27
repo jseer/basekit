@@ -1,0 +1,42 @@
+{
+  "name": "@zjseer/qiniu-oss",
+  "version": "1.0.0",
+  "description": "qiniu oss上传",
+  "keywords": [
+    "qiniu",
+    "oss",
+    "qiniu-oss"
+  ],
+  "author": "jseer",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/qiniu-oss.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jseer/basekit"
+  },
+  "scripts": {
+    "dev": "tsc -w",
+    "debug": "node --inspect --nolazy lib/qiniu-oss.js",
+    "build": "tsc --sourceMap false"
+  },
+  "dependencies": {
+    "@zjseer/util": "^1.0.0",
+    "qiniu": "^7.8.0",
+    "urllib": "^3.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9"
+  }
+}
