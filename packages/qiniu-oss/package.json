@@ -1,6 +1,6 @@
 {
   "name": "@zjseer/qiniu-oss",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "qiniu oss上传",
   "keywords": [
     "qiniu",
@@ -32,7 +32,7 @@
     "build": "tsc --sourceMap false"
   },
   "dependencies": {
-    "@zjseer/util": "^1.0.0",
+    "@zjseer/util": "^1.0.2",
     "qiniu": "^7.8.0",
     "urllib": "^3.5.2"
   },
