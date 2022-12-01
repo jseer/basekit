@@ -72,7 +72,17 @@ class Oss {
         const formUploader = new qiniu_1.default.form_up.FormUploader(config);
         return formUploader;
     }
-    putStream(uploadPath, parent, formUploader, putExtra) {
+    createEmptyResultByDir(dir) {
+        return {
+            dir,
+            allCount: 0,
+            success: [],
+            successCount: 0,
+            failCount: 0,
+            fail: [],
+        };
+    }
+    putStream(uploadPath, parent, formUploader, putExtra, result) {
         return __awaiter(this, void 0, void 0, function* () {
             const parentPath = path_1.default.join(uploadPath, parent);
             let files = yield promises_1.default.readdir(parentPath);
@@ -93,20 +103,26 @@ class Oss {
             for (let fileStat of fileStats) {
                 const stat = yield fileStat.stat;
                 if (stat.isDirectory()) {
-                    curDirectoryUploads.push(this.putStream(uploadPath, fileStat.key, formUploader, putExtra));
+                    curDirectoryUploads.push(this.putStream(uploadPath, fileStat.key, formUploader, putExtra, result));
                 }
                 else {
                     const readableStream = fs_1.default.createReadStream(fileStat.path);
                     curFileUploads.push(new Promise((resolve, reject) => {
                         formUploader.putStream(this.uploadToken, fileStat.key, readableStream, putExtra, function (respErr, respBody, respInfo) {
+                            result.allCount++;
                             if (respErr) {
+                                result.fail.push({ key: fileStat.key, error: respErr });
+                                result.failCount++;
                                 return reject(respErr);
                             }
                             if (respInfo.statusCode == 200) {
-                                console.log(respBody);
+                                result.success.push({ key: fileStat.key, body: respBody });
+                                result.successCount++;
                                 resolve();
                             }
                             else {
+                                result.fail.push({ key: fileStat.key, statusCode: respInfo.statusCode, body: respErr });
+                                result.failCount++;
                                 reject({
                                     statusCode: respInfo.statusCode,
                                     respBody,
@@ -116,21 +132,23 @@ class Oss {
                     }));
                 }
             }
-            yield Promise.all(curFileUploads.concat(curDirectoryUploads));
+            yield Promise.allSettled(curFileUploads.concat(curDirectoryUploads));
         });
     }
     uploadByStream(conf) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('[oss] uploadByStream => start ...');
+            console.log('[oss] uploadByStream start ...');
             yield Promise.race([
                 this.uploadTokenDeferred.promise,
                 this.getUploadTokenTimeout(),
             ]);
             const formUploader = this.getFormUploader(Object.assign({}, this._putStreamDefault, conf));
             const putExtra = new qiniu_1.default.form_up.PutExtra();
-            yield Promise.all(this.includeDirs.map((uploadPath) => this.putStream(uploadPath, '', formUploader, putExtra)));
-            console.log('[oss] uploadByStream => end');
+            const result = this.includeDirs.map(this.createEmptyResultByDir);
+            yield Promise.allSettled(this.includeDirs.map((uploadPath, i) => this.putStream(uploadPath, '', formUploader, putExtra, result[i])));
+            console.log('[oss] uploadByStream end => result: ', result);
         });
     }
 }
 exports.default = Oss;
+//# sourceMappingURL=qiniu-oss.js.map
