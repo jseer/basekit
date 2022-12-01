@@ -21,6 +21,9 @@ const path_1 = __importDefault(require("path"));
 class Oss {
     constructor(opts) {
         this.uploadTokenDeferred = (0, util_1.deferred)();
+        this.includeDirs = opts.includeDirs || [process.cwd()];
+        this.excludeKey = opts.excludeKey;
+        this.getUploadTokenUrl = opts.getUploadTokenUrl;
         if (opts.uploadToken) {
             this.uploadToken = opts.uploadToken;
             this.uploadTokenDeferred.resolve();
@@ -32,9 +35,6 @@ class Oss {
         else {
             throw new Error('[oss] uploadToken must direct specify uploadToken or provide getUploadTokenUrl');
         }
-        this.includeDirs = opts.includeDirs || [process.cwd()];
-        this.excludeKey = opts.excludeKey;
-        this.getUploadTokenUrl = opts.getUploadTokenUrl;
     }
     get _putStreamDefault() {
         return {

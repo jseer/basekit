@@ -23,6 +23,9 @@ class Oss implements IOssProps {
   public getUploadTokenUrl;
   constructor(opts: IOssProps) {
     this.uploadTokenDeferred = deferred();
+    this.includeDirs = opts.includeDirs || [process.cwd()];
+    this.excludeKey = opts.excludeKey;
+    this.getUploadTokenUrl = opts.getUploadTokenUrl;
     if (opts.uploadToken) {
       this.uploadToken = opts.uploadToken;
       this.uploadTokenDeferred.resolve();
@@ -34,9 +37,6 @@ class Oss implements IOssProps {
         '[oss] uploadToken must direct specify uploadToken or provide getUploadTokenUrl'
       );
     }
-    this.includeDirs = opts.includeDirs || [process.cwd()];
-    this.excludeKey = opts.excludeKey;
-    this.getUploadTokenUrl = opts.getUploadTokenUrl;
   }
 
   get _putStreamDefault() {
