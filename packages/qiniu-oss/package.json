@@ -28,7 +28,7 @@
   },
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc"
+    "build": "tsc --sourceMap false"
   },
   "dependencies": {
     "@zjseer/util": "^1.0.2",
