@@ -28,8 +28,7 @@
   },
   "scripts": {
     "dev": "tsc -w",
-    "debug": "node --inspect --nolazy lib/qiniu-oss.js",
-    "build": "tsc --sourceMap false"
+    "build": "tsc"
   },
   "dependencies": {
     "@zjseer/util": "^1.0.2",
