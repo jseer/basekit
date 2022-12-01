@@ -1,6 +1,6 @@
 {
   "name": "@zjseer/qiniu-oss",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "qiniu oss上传",
   "keywords": [
     "qiniu",
